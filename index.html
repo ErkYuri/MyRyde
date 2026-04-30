@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <!-- Meta tag crucial para Mobile-First: garante proporção correta e evita zoom indesejado -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ryde | Autonomia S17</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="app-header">
+        <h1>Ryde</h1>
+        <p>Bateria & Autonomia</p>
+    </header>
+
+    <main class="app-content">
+        <!-- BATERIA ATUAL -->
+        <section class="battery-section">
+            <div class="battery-card">
+                <h2>Bateria Atual</h2>
+                <div class="input-group">
+                    <input type="number" id="current-battery" placeholder="100" min="0" max="100" pattern="[0-9]*">
+                    <span class="percent-symbol">%</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRAJETOS -->
+         <section class="routes-section">
+            <div class="section-header">
+                <h2>Meus Trajetos</h2>
+                <button id="add-route-btn" class="icon-btn" aria-label="Adicionar novo trajeto"> + </button>
+            </div>
+         
+
+            <!-- ONDE OS TRAJETOS VAO APARECER -->
+            <ul id="routes-list" class="routes-list">
+                
+            </ul>
+          </section>
+
+
+    </main>
+
+    <script src="app.js"></script>
+
+</body>
+
+
+
+
+
+
+</html>
