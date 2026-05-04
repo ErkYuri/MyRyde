@@ -140,6 +140,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 4px; /* Pequeno respiro lateral */
+    margin-bottom: 10px;
 }
 
 .section-header h2 {
@@ -168,4 +169,227 @@ body {
 .icon-btn:active {
     transform: scale(0.85); /* Afunda ao tocar */
     box-shadow: 0 2px 8px var(--brand-green-glow);
+}
+
+
+
+/* ITENS DA LISTA DE TRAJETOS */
+
+/* exibicao da lista de trajetos */
+.routes-list { 
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px; /* Aumente este valor (ex: 20px ou 24px) se quiser ainda mais espaço */
+    padding-bottom: 30px; /* Um espaço extra no final da tela para rolar suave */
+}
+
+.route-item {
+    background-color: var(--surface-dark);
+    padding: 15px;
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.route-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.route-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color:var(--text-primary);
+}
+
+.route-consumption {
+    background-color: rgba(145, 237, 13, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.consumption-value {
+    color: var(--brand-green);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+
+/* OVERLAY ADD TRAJETO */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro semi-transparente */
+    backdrop-filter: blur(5px); /* Efeito de vidro borrado estilo iOS */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Garante que fique por cima de TUDO */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* A classe que o JavaScript vai usar para esconder o modal */
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none; /* Impede cliques quando invisível */
+}
+
+.modal-card {
+    background-color: var(--surface-dark);
+    width: 90%;
+    max-width: 400px;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.hidden .modal-card {
+    transform: translateY(30px); /* O modal "sobe" quando aparece */
+}
+
+.modal-card h3 {
+    margin-bottom: var(--spacing-md);
+    color: var(--brand-green);
+    text-align: center;
+}
+
+/* --- FORMULÁRIOS DO MODAL --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.form-group input {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    border-color: var(--brand-green);
+}
+
+/* --- BOTÕES DO MODAL --- */
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: var(--spacing-lg);
+}
+
+.modal-actions button {
+    flex: 1; /* Faz os botões dividirem o espaço igualmente */
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.modal-actions button:active {
+    transform: scale(0.95);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-primary {
+    background-color: var(--brand-green);
+    color: var(--bg-dark);
+}
+
+
+
+/* --- MODAL DE ALERTA DE BATERIA --- */
+.alert-card {
+    text-align: center;
+    border-top: 4px solid var(--alert-red); /* Borda superior vermelha para destacar o erro */
+}
+
+.alert-icon {
+    width: 72px; /* Tamanho do ícone */
+    height: auto;
+    margin: 0 auto var(--spacing-md) auto;
+    display: block;
+    /* Um leve brilho vermelho em volta da imagem para combinar com o app */
+    filter: drop-shadow(0 4px 10px rgba(255, 69, 58, 0.4));
+}
+
+.alert-title {
+    color: var(--alert-red) !important; /* Força a cor vermelha por cima do estilo padrão do modal */
+    font-size: 1.4rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.alert-message {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Um botão vermelho para a ação de fechar o alerta */
+.btn-alert {
+    background-color: var(--alert-red);
+    box-shadow: 0 4px 15px rgba(255, 69, 58, 0.3);
+}
+
+
+/* --- MODAL DE AVISO (TRAJETO ARRISCADO) --- */
+:root {
+    --warning-orange: #FF9F0A; /* Laranja de atenção */
+}
+
+.advice-card {
+    text-align: center;
+    border-top: 4px solid var(--warning-orange);
+}
+
+.advice-icon {
+    width: 72px;
+    height: auto;
+    margin: 0 auto var(--spacing-md) auto;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(255, 159, 10, 0.4));
+}
+
+.advice-title {
+    color: var(--warning-orange) !important;
+    font-size: 1.4rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.btn-advice {
+    background-color: var(--warning-orange);
+    color: #121212; /* Texto preto para contrastar com o botão laranja */
+    box-shadow: 0 4px 15px rgba(255, 159, 10, 0.3);
 }

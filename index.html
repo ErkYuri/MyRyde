@@ -11,7 +11,7 @@
 <body>
     <header class="app-header">
         <h1>Ryde</h1>
-        <p>Bateria & Autonomia</p>
+        <p>Controle Pessoal de Autonomia</p>
     </header>
 
     <main class="app-content">
@@ -42,6 +42,65 @@
 
 
     </main>
+
+    <!-- TELA DE ADD TRAJETO -->
+     <div id="add-route-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>Novo Trajeto</h3>
+            <div class="form-group">
+                <label for="route-name-input">Nome do Trajeto</label>
+                <input type="text" id="route-name-input" placeholder="Ex: Trabalho -> Casa">
+            </div>
+
+            <div class="form-group">
+                <label for="route-consumption-input">Consumo de Bateria</label>
+                <input type="number" id="route-consumption-input" placeholder="15" min="'" max="100" pattern="[0-9]*">
+            </div>
+
+            <div class="modal-actions">
+                <button id="cancel-route-btn" class="btn-secondary">Cancelar</button>
+                <button id="save-route-btn" class="btn-primary">Salvar</button>
+            </div>
+
+        </div>
+     </div> 
+
+
+     <!-- TELA DE BATERIA INSUFICIENTE -->
+     <div id="battery-alert" class="modal-overlay hidden">
+        <div class="modal-card alert-card">
+            <!-- Imagem da bateria fraca centralizada -->
+            <img src="img/lowbattery.png" alt="Ícone de Bateria Fraca" class="alert-icon">
+
+            <h3 class="alert-title">Carga Insuficiente!</h3>
+            <p class="alert-message">A bateria atual não é suficiente para concluir o trajeto selecionado.</p>
+
+
+            <div class="modal-actions">
+                <button id="close-alert-btn" class="btn-primary btn-alert">Cancelar</button>
+            </div>
+            
+        </div>
+     </div> 
+
+
+     <!-- TELA DE POUCA BATERIA -->
+     <div id="battery-advice" class="modal-overlay hidden">
+        <div class="modal-card advice-card">
+            <!-- Imagem da bateria fraca centralizada -->
+            <img src="img/batteryending.png" alt="Ícone de Pouca Bateria" class="advice-icon">
+
+            <h3 class="advice-title">Atenção!</h3>
+            <p class="alert-message">Bateria próxima de zero poderá perder força e correr risco de desligamento automático.</p>
+
+
+            <div class="modal-actions">
+                <button id="close-advice-btn" class="btn-primary btn-advice">Entendi</button>
+            </div>
+            
+        </div>
+     </div> 
+
 
     <script src="app.js"></script>
 
