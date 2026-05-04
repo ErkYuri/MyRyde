@@ -1,0 +1,22 @@
+{
+  "name": "Ryde - Autonomia",
+  "short_name": "Ryde",
+  "description": "Controle de autonomia e bateria para StreetGo",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#91ed0d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
