@@ -10,7 +10,7 @@ if ('serviceWorker' in navigator) {
 
 
 // --- CONSTANTES ---
-const STORAGE_KEY = '@ryde:routes'; 
+const STORAGE_KEY = '@myryde:routes'; 
 
 // --- SERVIÇOS DE DADOS (LocalStorage) ---
 
@@ -122,7 +122,7 @@ function renderRoutes(routes) {
 // --- INICIALIZAÇÃO DO APP ---
 
 function initApp() {
-    console.log("Iniciando Ryde...");
+    console.log("Iniciando MyRyde...");
 
     const routes = getRoutes();
     saveRoutes(routes); // Garante que o exemplo seja salvo no primeiro uso

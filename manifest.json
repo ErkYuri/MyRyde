@@ -1,6 +1,6 @@
 {
-  "name": "Ryde - Autonomia",
-  "short_name": "Ryde",
+  "name": "MyRyde - Autonomia",
+  "short_name": "MyRyde",
   "description": "Controle de autonomia e bateria para StreetGo",
   "start_url": "./index.html",
   "display": "standalone",
