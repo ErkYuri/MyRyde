@@ -50,8 +50,6 @@ function renderRoutes(routes) {
     routes.forEach(route => {
         const li = document.createElement('li');
         li.className = 'route-item';
-        
-        // NOVO: Muda o ponteiro do mouse para a "mãozinha" indicando que é clicável no PC
         li.style.cursor = 'pointer'; 
 
         li.innerHTML = `
@@ -63,9 +61,45 @@ function renderRoutes(routes) {
             </div>
         `;
 
-        // NOVO: Adiciona a ação de clique neste cartão específico
+        // --- LÓGICA DO TOQUE LONGO ---
+        let pressTimer;
+        let isLongPress = false;
+
+        // Função que inicia o cronômetro
+        const startPress = (e) => {
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+                // Captura a coordenada Y de onde o usuário tocou
+                const touchY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                openOptionsMenu(route, touchY);
+            }, 600); 
+        };
+
+        // Função que cancela o cronômetro se o usuário soltar ou arrastar o dedo antes da hora
+        const cancelPress = () => {
+            clearTimeout(pressTimer);
+        };
+
+        // Eventos para o Mouse (Computador)
+        li.addEventListener('mousedown', startPress);
+        li.addEventListener('mouseup', cancelPress);
+        li.addEventListener('mouseleave', cancelPress);
+
+        // Eventos para o Toque (Celular)
+        li.addEventListener('touchstart', startPress, { passive: true });
+        li.addEventListener('touchend', cancelPress);
+        li.addEventListener('touchmove', cancelPress);
+
+        // O Clique normal (deduzir bateria) agora tem uma condição
         li.addEventListener('click', () => {
-            applyRouteConsumption(route.consumoPercentual);
+            // Só subtrai a bateria se NÃO tiver sido um toque longo
+            if (!isLongPress) {
+                applyRouteConsumption(route.consumoPercentual);
+            }
         });
 
         listElement.appendChild(li);
@@ -86,7 +120,8 @@ function initApp() {
     renderRoutes(routes); 
 }
 
-// LOGICA DO OVERLAY E CADASTRO DE ROTAS
+// --- LÓGICA DO MODAL (ADICIONAR / EDITAR) ---
+let editingRouteId = null;
 
 // Pegando do HTML
 const modalOverlay = document.getElementById('add-route-modal');
@@ -100,6 +135,7 @@ const inputRouteConsumption = document.getElementById('route-consumption-input')
 
 // Funcao para abrir modal
 function openModal() {
+    editingRouteId = null;
     modalOverlay.classList.remove('hidden');
 }
 
@@ -108,6 +144,7 @@ function closeModal() {
     modalOverlay.classList.add('hidden');
     inputRouteName.value = '';
     inputRouteConsumption.value = '';
+    editingRouteId = null;
 }
 
 openModalBtn.addEventListener('click', openModal);
@@ -124,26 +161,35 @@ saveRouteBtn.addEventListener('click', () => {
         return;
     }
 
-    // Cria o objeto do novo trajeto
-    const novoTrajeto = {
-        id: Date.now(), // Gera um ID único baseado na data/hora atual
-        nome: nome,
-        consumoPercentual: consumo
-    };
+    let routes = getRoutes();
 
-    // 1. Puxa os trajetos que já existem no LocalStorage
-    const routes = getRoutes();
+    // Se a variável tiver um ID, significa que estamos no modo Edição!
+    if (editingRouteId) {
+        // Encontra a posição do trajeto antigo na lista
+        const index = routes.findIndex(r => r.id === editingRouteId);
+        if (index !== -1) {
+            // Atualiza os dados na mesma posição
+            routes[index].nome = nome;
+            routes[index].consumoPercentual = consumo;
+        }
+    } else {
+        // Se não tem ID, é criação normal
+        const novoTrajeto = {
+            id: Date.now(),
+            nome: nome,
+            consumoPercentual: consumo
+        };
+        routes.push(novoTrajeto);
+    }
+
     
-    // 2. Adiciona o novo trajeto na lista
-    routes.push(novoTrajeto);
-    
-    // 3. Salva a lista atualizada de volta no banco
+    // Salva a lista atualizada de volta no banco
     saveRoutes(routes);
     
-    // 4. Desenha a tela novamente com o item novo
+    // Desenha a tela novamente com o item novo
     renderRoutes(routes);
     
-    // 5. Fecha o modal
+    // Fecha o modal
     closeModal();
 });
 
@@ -198,5 +244,91 @@ function applyRouteConsumption(consumoDoTrajeto) {
     batteryInput.value = novaBateria;
 }
 
-// Executa a inicialização
-initApp();
+
+
+// --- LÓGICA DO MENU DE CONTEXTO E EXCLUSÃO ---
+
+let routeSelectedId = null; 
+
+const optionsOverlay = document.getElementById('route-options-modal');
+const contextMenu = document.getElementById('context-menu');
+const deleteRouteBtn = document.getElementById('delete-route-btn');
+const editRouteBtn = document.getElementById('edit-route-btn');
+
+function openOptionsMenu(route, touchY) {
+    routeSelectedId = route.id;
+    
+    // Posiciona o menu no centro (X) e um pouco acima do dedo do usuário (Y)
+    contextMenu.style.left = '50%';
+    contextMenu.style.top = `${touchY - 60}px`; // Sobe 60px para não ficar embaixo do dedo
+    
+    optionsOverlay.classList.remove('hidden');
+}
+
+function closeOptionsMenu() {
+    optionsOverlay.classList.add('hidden');
+    routeSelectedId = null;
+}
+
+// O GRANDE TRUQUE: Fecha o menu se clicar no fundo transparente
+optionsOverlay.addEventListener('click', (e) => {
+    if (e.target === optionsOverlay) {
+        closeOptionsMenu();
+    }
+});
+
+// AÇÃO: EXCLUIR TRAJETO
+// Elementos da Caixinha de Confirmação
+const confirmDeleteModal = document.getElementById('delete-confirm-modal');
+const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+// 1. AÇÃO NO MENU FLUTUANTE: Abre a caixinha de confirmação em vez de excluir direto
+deleteRouteBtn.addEventListener('click', () => {
+    // CORREÇÃO: Apenas escondemos o menu visualmente, mantendo o routeSelectedId intacto na memória!
+    optionsOverlay.classList.add('hidden'); 
+    
+    // Mostra a confirmação
+    confirmDeleteModal.classList.remove('hidden'); 
+});
+
+// 2. SE DESISTIR: Fecha a confirmação
+cancelDeleteBtn.addEventListener('click', () => {
+    confirmDeleteModal.classList.add('hidden');
+    routeSelectedId = null; // Limpa a memória de qual trajeto estava selecionado
+});
+
+// 3. SE CONFIRMAR DE FATO: Apaga do banco de dados
+confirmDeleteBtn.addEventListener('click', () => {
+    let routes = getRoutes();
+    routes = routes.filter(r => r.id !== routeSelectedId);
+    
+    saveRoutes(routes); 
+    renderRoutes(routes); 
+    
+    confirmDeleteModal.classList.add('hidden'); // Esconde a caixinha
+    routeSelectedId = null; // Limpa a memória
+});
+
+
+// AÇÃO: EDITAR TRAJETO
+editRouteBtn.addEventListener('click', () => {
+    // 1. Pega os dados do banco
+    const routes = getRoutes();
+    
+    // 2. Acha o trajeto específico que o usuário clicou usando o ID
+    const routeToEdit = routes.find(r => r.id === routeSelectedId);
+    
+    if (routeToEdit) {
+        // 3. Preenche as caixinhas de texto com os dados do trajeto
+        inputRouteName.value = routeToEdit.nome;
+        inputRouteConsumption.value = routeToEdit.consumoPercentual;
+        
+        // 4. Avisa o sistema que estamos no modo de edição deste ID
+        editingRouteId = routeToEdit.id;
+        
+        // 5. Fecha o menuzinho flutuante e abre o Modal principal
+        closeOptionsMenu();
+        modalOverlay.classList.remove('hidden'); 
+    }
+});

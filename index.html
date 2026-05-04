@@ -102,6 +102,31 @@
      </div> 
 
 
+
+    <!-- TELA DE OPÇÕES DO TRAJETO (Menu de Contexto) -->
+    <div id="route-options-modal" class="context-overlay hidden">
+        <div class="context-menu" id="context-menu">
+            <!-- Fonte normal, cor neutra ou verde -->
+            <button id="edit-route-btn" class="context-btn">Editar Trajeto</button>
+            <!-- Fonte vermelha de alerta -->
+            <button id="delete-route-btn" class="context-btn context-delete">Excluir Trajeto</button>
+        </div>
+    </div>
+
+
+    <!-- TELA DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div id="delete-confirm-modal" class="modal-overlay hidden">
+        <div class="modal-card confirm-card">
+            <h3 class="confirm-title">Excluir Trajeto?</h3>
+            
+            <div class="modal-actions">
+                <button id="cancel-delete-btn" class="btn-secondary">Cancelar</button>
+                <button id="confirm-delete-btn" class="btn-primary btn-danger">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+
     <script src="app.js"></script>
 
 </body>

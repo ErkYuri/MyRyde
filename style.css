@@ -393,3 +393,81 @@ body {
     color: #121212; /* Texto preto para contrastar com o botão laranja */
     box-shadow: 0 4px 15px rgba(255, 159, 10, 0.3);
 }
+
+
+/* --- MENU DE CONTEXTO (Estilo Instagram) --- */
+.context-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent; /* Fundo invisível! Serve só para capturar o clique fora */
+    z-index: 2000;
+}
+
+.context-overlay.hidden {
+    display: none; /* Usamos display: none para ele não bloquear a tela quando escondido */
+}
+
+.context-menu {
+    position: absolute; /* Permite que o JS mude a posição dele na tela */
+    background-color: var(--surface-light); /* Um cinza um pouco mais claro que o fundo */
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    overflow: hidden; /* Garante que os botões não vazem as bordas arredondadas */
+    
+    /* Animação de pop-up rápido */
+    animation: popIn 0.15s ease-out forwards;
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.9) translateX(-50%); }
+    to { opacity: 1; transform: scale(1) translateX(-50%); }
+}
+
+.context-btn {
+    background: transparent;
+    border: none;
+    padding: 16px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.context-btn:active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.context-delete {
+    color: var(--alert-red);
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Linha sutil separando as opções */
+}
+
+
+
+/* --- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO --- */
+.confirm-card {
+    max-width: 320px; /* Caixinha mais estreita para parecer um "alerta rápido" */
+    text-align: center;
+}
+
+.confirm-title {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+/* Botão vermelho de ação destrutiva */
+.btn-danger {
+    background-color: var(--alert-red);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 69, 58, 0.3);
+}
