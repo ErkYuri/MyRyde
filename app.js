@@ -397,6 +397,61 @@ exportBackupBtn.addEventListener('click', () => {
 });
 
 
+// --- LÓGICA DE BACKUP (IMPORTAR) ---
+
+const importBackupBtn = document.getElementById('import-backup-btn');
+const importFileInput = document.getElementById('import-file-input');
+
+// 1. Truque: O botão bonito clica no input invisível
+importBackupBtn.addEventListener('click', () => {
+    importFileInput.click();
+});
+
+// 2. Quando o usuário escolhe um arquivo no celular/PC
+importFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    
+    // Se o usuário cancelou a escolha, não faz nada
+    if (!file) return;
+
+    // Ferramenta nativa do JS para ler arquivos
+    const reader = new FileReader();
+
+    // 3. O que fazer quando terminar de ler o arquivo
+    reader.onload = (evento) => {
+        try {
+            // Pega o texto do arquivo e transforma de volta em um Array de trajetos
+            const dadosRecuperados = JSON.parse(evento.target.result);
+
+            // Confirma se o que veio no arquivo é realmente uma lista (Array)
+            if (Array.isArray(dadosRecuperados)) {
+                
+                // Usamos um confirm() rápido para evitar que o usuário apague tudo sem querer
+                if(confirm("Isso vai substituir TODOS os seus trajetos atuais por este backup. Deseja continuar?")) {
+                    
+                    saveRoutes(dadosRecuperados); // Salva no banco de dados local
+                    renderRoutes(dadosRecuperados); // Redesenha a tela
+                    
+                    alert("Backup importado com sucesso!");
+                    settingsModal.classList.add('hidden'); // Fecha a aba de configurações
+                }
+                
+            } else {
+                alert("Arquivo inválido. Certifique-se de que é um backup do MyRyde.");
+            }
+        } catch (erro) {
+            alert("Erro ao ler o arquivo. Ele pode estar corrompido ou não ser um .json válido.");
+        }
+        
+        // Limpa o input invisível para permitir importar o mesmo arquivo de novo se necessário
+        importFileInput.value = '';
+    };
+
+    // Manda o leitor ler o arquivo como texto
+    reader.readAsText(file);
+});
+
+
 
 // --- INICIALIZAÇÃO ---
 
