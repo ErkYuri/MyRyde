@@ -1,7 +1,7 @@
 {
-  "name": "MyRyde - Autonomia",
+  "name": "MyRyde - Controle de Autonomia",
   "short_name": "MyRyde",
-  "description": "Controle de autonomia e bateria para StreetGo",
+  "description": "Controle Pessoal de Autonomia Veicular",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#121212",

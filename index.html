@@ -14,6 +14,11 @@
     <header class="app-header">
         <h1>MyRyde</h1>
         <p>Controle Pessoal de Autonomia Veicular</p>
+
+        <button id="settings-btn" class="icon-btn settings-btn" aria-label="Configurações" >
+            <img src="./img/config.png" alt="icon-btn" style="width:70px;height:70px;">
+        </button>
+        
     </header>
 
     <main class="app-content">
@@ -127,6 +132,27 @@
             </div>
         </div>
     </div>
+
+
+    <!-- TELA DE CONFIGURAÇÕES / BACKUP -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <button id="close-settings-btn" class="close-x-btn" aria-label="Fechar" style="width:30px;height:30px;">&times;</button>
+
+            <h3 class="options-title">Configurações</h3>
+
+            <div class="options-list">
+                <button id="export-backup-btn" class="btn-option">
+                    💾 Exportar Backup (.json)
+                </button>
+                <button id="import-backup-btn" class="btn-option">
+                    📂 Importar Backup
+                </button>
+            </div>
+        </div>
+    </div>
+
+
 
 
     <script src="app.js"></script>

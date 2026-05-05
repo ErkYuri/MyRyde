@@ -1,11 +1,11 @@
 // --- REGISTRO DO SERVICE WORKER (PWA) ---
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registrado com sucesso!', reg.scope))
-            .catch(err => console.error('Erro ao registrar Service Worker:', err));
-    });
-}
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker.register('./sw.js')
+//             .then(reg => console.log('Service Worker registrado com sucesso!', reg.scope))
+//             .catch(err => console.error('Erro ao registrar Service Worker:', err));
+//     });
+// }
 
 
 
@@ -119,18 +119,6 @@ function renderRoutes(routes) {
 
 }
 
-// --- INICIALIZAÇÃO DO APP ---
-
-function initApp() {
-    console.log("Iniciando MyRyde...");
-
-    const routes = getRoutes();
-    saveRoutes(routes); // Garante que o exemplo seja salvo no primeiro uso
-
-    // Chamamos a função para desenhar a interface!
-    renderRoutes(routes); 
-}
-
 // --- LÓGICA DO MODAL (ADICIONAR / EDITAR) ---
 let editingRouteId = null;
 
@@ -160,6 +148,12 @@ function closeModal() {
 
 openModalBtn.addEventListener('click', openModal);
 closeModalBtn.addEventListener('click', closeModal);
+
+modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+        closeModal(); 
+    }
+});
 
 // Funcao atrelada ao Salvar no modal
 saveRouteBtn.addEventListener('click', () => {
@@ -303,10 +297,19 @@ deleteRouteBtn.addEventListener('click', () => {
     confirmDeleteModal.classList.remove('hidden'); 
 });
 
+
+
 // 2. SE DESISTIR: Fecha a confirmação
 cancelDeleteBtn.addEventListener('click', () => {
     confirmDeleteModal.classList.add('hidden');
     routeSelectedId = null; // Limpa a memória de qual trajeto estava selecionado
+});
+
+confirmDeleteModal.addEventListener('click', (e) => {
+    if (e.target === confirmDeleteModal) {
+        confirmDeleteModal.classList.add('hidden');
+        routeSelectedId = null; // Limpamos a memória para não apagar a rota errada depois
+    }
 });
 
 // 3. SE CONFIRMAR DE FATO: Apaga do banco de dados
@@ -343,3 +346,70 @@ editRouteBtn.addEventListener('click', () => {
         modalOverlay.classList.remove('hidden'); 
     }
 });
+
+
+// --- LÓGICA DE BACKUP (EXPORTAR) ---
+
+const settingsModal = document.getElementById('settings-modal');
+const settingsBtn = document.getElementById('settings-btn');
+const closeSettingsBtn = document.getElementById('close-settings-btn');
+const exportBackupBtn = document.getElementById('export-backup-btn');
+
+// Abrir e fechar configurações
+settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
+closeSettingsBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+
+settingsModal.addEventListener('click', (e) => {
+    // Se onde eu cliquei foi EXATAMENTE o fundo escuro (e não o card dentro dele)
+    if (e.target === settingsModal) {
+        settingsModal.classList.add('hidden');
+    }
+});
+
+// Ação de baixar o backup
+exportBackupBtn.addEventListener('click', () => {
+    const routes = getRoutes();
+    
+    if (routes.length === 0) {
+        alert("Não há trajetos para exportar no momento.");
+        return;
+    }
+
+    // 1. Transforma os dados JS em um texto JSON bonito e identado
+    const dataStr = JSON.stringify(routes, null, 2);
+    
+    // 2. Cria um "arquivo de texto" na memória do navegador
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    // 3. Cria um link invisível, aperta nele e depois apaga (Truque para forçar download)
+    const link = document.createElement('a');
+    link.href = url;
+    
+    // Gera um nome de arquivo automático com a data de hoje
+    const dataHoje = new Date().toISOString().split('T')[0];
+    link.download = `myryde-backup-${dataHoje}.json`;
+    
+    link.click();
+    
+    // Limpa a memória para não pesar o navegador
+    URL.revokeObjectURL(url);
+});
+
+
+
+// --- INICIALIZAÇÃO ---
+
+function initApp() {
+    const routes = getRoutes();
+    
+    // Se a lista estiver vazia no banco, salva as rotas padrão
+    if (localStorage.getItem(STORAGE_KEY) === null) {
+        saveRoutes(routes);
+    }
+
+    // Desenha a interface na mesma hora
+    renderRoutes(routes); 
+}
+
+initApp();
