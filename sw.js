@@ -16,6 +16,25 @@ self.addEventListener('install', event => {
   );
 });
 
+
+// --- NOVO: Limpa os caches antigos quando a versão muda ---
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cache => {
+          // Se o nome do cache antigo for diferente do atual (ex: v1 é diferente de v2)
+          if (cache !== CACHE_NAME) {
+            console.log('Apagando cache antigo:', cache);
+            return caches.delete(cache); // Apaga a versão velha!
+          }
+        })
+      );
+    })
+  );
+});
+
+
 // Intercepta as requisições: se tiver sem internet, devolve do cache
 self.addEventListener('fetch', event => {
   event.respondWith(
