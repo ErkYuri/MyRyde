@@ -545,3 +545,22 @@ body {
 .close-x-btn:hover, .close-x-btn:active {
     color: var(--brand-green); 
 }
+
+
+
+/* Impede a seleção de texto nos cards para não conflitar com o toque longo */
+.route-item {
+    -webkit-user-select: none;  /* Safari/Chrome iOS */
+    -moz-user-select: none;     /* Firefox */
+    -ms-user-select: none;      /* IE/Edge */
+    user-select: none;          /* Padrão */
+    
+    /* Remove o realce azulado ao tocar no Android/Chrome */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Opcional: permite seleção apenas nos inputs para você ainda conseguir digitar a bateria */
+input {
+    -webkit-user-select: text;
+    user-select: text;
+}

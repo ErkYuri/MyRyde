@@ -352,12 +352,10 @@ editRouteBtn.addEventListener('click', () => {
 
 const settingsModal = document.getElementById('settings-modal');
 const settingsBtn = document.getElementById('settings-btn');
-const closeSettingsBtn = document.getElementById('close-settings-btn');
 const exportBackupBtn = document.getElementById('export-backup-btn');
 
 // Abrir e fechar configurações
 settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
-closeSettingsBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
 settingsModal.addEventListener('click', (e) => {
     // Se onde eu cliquei foi EXATAMENTE o fundo escuro (e não o card dentro dele)
