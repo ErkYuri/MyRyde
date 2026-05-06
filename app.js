@@ -402,54 +402,79 @@ exportBackupBtn.addEventListener('click', () => {
 const importBackupBtn = document.getElementById('import-backup-btn');
 const importFileInput = document.getElementById('import-file-input');
 
+// Elementos da nossa nova caixinha de confirmação do HTML
+const importConfirmModal = document.getElementById('import-confirm-modal');
+const cancelImportBtn = document.getElementById('cancel-import-btn');
+const confirmImportBtn = document.getElementById('confirm-import-btn');
+
+// O SEGREDO: Variável global para segurar os dados enquanto o usuário pensa
+let pendingImportData = null;
+
 // 1. Truque: O botão bonito clica no input invisível
 importBackupBtn.addEventListener('click', () => {
     importFileInput.click();
 });
 
-// 2. Quando o usuário escolhe um arquivo no celular/PC
+// 2. Quando o usuário escolhe um arquivo
 importFileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
-    
-    // Se o usuário cancelou a escolha, não faz nada
     if (!file) return;
 
-    // Ferramenta nativa do JS para ler arquivos
     const reader = new FileReader();
 
-    // 3. O que fazer quando terminar de ler o arquivo
     reader.onload = (evento) => {
         try {
-            // Pega o texto do arquivo e transforma de volta em um Array de trajetos
             const dadosRecuperados = JSON.parse(evento.target.result);
 
-            // Confirma se o que veio no arquivo é realmente uma lista (Array)
             if (Array.isArray(dadosRecuperados)) {
-                
-                // Usamos um confirm() rápido para evitar que o usuário apague tudo sem querer
-                if(confirm("Isso vai substituir TODOS os seus trajetos atuais por este backup. Deseja continuar?")) {
-                    
-                    saveRoutes(dadosRecuperados); // Salva no banco de dados local
-                    renderRoutes(dadosRecuperados); // Redesenha a tela
-                    
-                    alert("Backup importado com sucesso!");
-                    settingsModal.classList.add('hidden'); // Fecha a aba de configurações
-                }
-                
+                // Em vez de usar confirm() nativo, guardamos os dados na variável e abrimos a nossa caixinha!
+                pendingImportData = dadosRecuperados; 
+                importConfirmModal.classList.remove('hidden'); 
             } else {
                 alert("Arquivo inválido. Certifique-se de que é um backup do MyRyde.");
+                importFileInput.value = ''; // Limpa o input
             }
         } catch (erro) {
             alert("Erro ao ler o arquivo. Ele pode estar corrompido ou não ser um .json válido.");
+            importFileInput.value = ''; 
         }
-        
-        // Limpa o input invisível para permitir importar o mesmo arquivo de novo se necessário
-        importFileInput.value = '';
     };
 
-    // Manda o leitor ler o arquivo como texto
     reader.readAsText(file);
 });
+
+// 3. AÇÃO: SE O USUÁRIO CANCELAR
+cancelImportBtn.addEventListener('click', () => {
+    importConfirmModal.classList.add('hidden'); // Esconde a caixinha
+    pendingImportData = null; // Esvazia a variável de segurança
+    importFileInput.value = ''; // Limpa o input para permitir selecionar o mesmo arquivo de novo
+});
+
+// 4. AÇÃO: SE O USUÁRIO CONFIRMAR
+confirmImportBtn.addEventListener('click', () => {
+    // Só prossegue se tiver dados salvos na variável
+    if (pendingImportData) {
+        saveRoutes(pendingImportData); // Salva de fato no LocalStorage
+        renderRoutes(pendingImportData); // Redesenha a lista de trajetos na tela
+        
+        importConfirmModal.classList.add('hidden'); // Esconde a caixinha de confirmação
+        settingsModal.classList.add('hidden'); // Esconde a aba de configurações (engrenagem)
+        
+        pendingImportData = null; // Esvazia a variável
+        importFileInput.value = ''; // Limpa o input
+    }
+});
+
+// 5. BÔNUS DE UX: Fechar tocando na área escura de fora
+importConfirmModal.addEventListener('click', (e) => {
+    if (e.target === importConfirmModal) {
+        importConfirmModal.classList.add('hidden');
+        pendingImportData = null; 
+        importFileInput.value = '';
+    }
+});
+
+
 
 
 
