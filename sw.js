@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myryde-cache-v1';
+const CACHE_NAME = 'myryde-cache-v0';
 const urlsToCache = [
   './',
   './index.html',
