@@ -44,20 +44,20 @@ function saveRoutes(routes) {
  * Pega o array de trajetos e transforma em elementos HTML na tela.
  */
 function renderRoutes(routes) {
-    // 1. Capturamos a lista (ul) do HTML
+    // 1. Captura a lista (ul) do HTML
     const listElement = document.getElementById('routes-list');
     
-    // 2. Limpamos a lista antes de desenhar para não duplicar itens 
-    // se chamarmos essa função várias vezes
+    // 2. Limpa a lista antes de desenhar para não duplicar itens 
+    // se chamar essa função várias vezes
     listElement.innerHTML = ''; 
 
-    // 3. Se a lista estiver vazia, mostramos uma mensagem amigável
+    // 3. Se a lista estiver vazia, mostra uma mensagem amigável
     if (routes.length === 0) {
         listElement.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 20px;">Nenhum trajeto cadastrado ainda.</p>';
-        return; // Para a execução da função aqui
+        return; 
     }
 
-    // 4. Se tiver rotas, percorremos o array criando os cartõezinhos
+    // 4. Se tiver rotas, percorre o array criando os cartões
     routes.forEach(route => {
         const li = document.createElement('li');
         li.className = 'route-item';
@@ -105,7 +105,7 @@ function renderRoutes(routes) {
         li.addEventListener('touchend', cancelPress);
         li.addEventListener('touchmove', cancelPress);
 
-        // O Clique normal (deduzir bateria) agora tem uma condição
+        // O Clique normal (deduzir bateria)tem uma condição
         li.addEventListener('click', () => {
             // Só subtrai a bateria se NÃO tiver sido um toque longo
             if (!isLongPress) {
@@ -160,7 +160,7 @@ saveRouteBtn.addEventListener('click', () => {
     const nome = inputRouteName.value.trim(); // .trim() remove espaços vazios
     const consumo = parseInt(inputRouteConsumption.value);
 
-    // Validação básica: impede salvar se os campos estiverem vazios ou inválidos
+    // impede salvar se os campos estiverem vazios ou inválidos
     if (!nome || isNaN(consumo) || consumo <= 0) {
         alert("Por favor, preencha o nome e um consumo válido.");
         return;
@@ -168,7 +168,7 @@ saveRouteBtn.addEventListener('click', () => {
 
     let routes = getRoutes();
 
-    // Se a variável tiver um ID, significa que estamos no modo Edição!
+    // Se a variável tiver um ID, significa que esta no modo Edição
     if (editingRouteId) {
         // Encontra a posição do trajeto antigo na lista
         const index = routes.findIndex(r => r.id === editingRouteId);
@@ -178,7 +178,7 @@ saveRouteBtn.addEventListener('click', () => {
             routes[index].consumoPercentual = consumo;
         }
     } else {
-        // Se não tem ID, é criação normal
+        // Se não tem ID é criação normal
         const novoTrajeto = {
             id: Date.now(),
             nome: nome,
@@ -242,7 +242,7 @@ function applyRouteConsumption(consumoDoTrajeto) {
     // 2. Verifica se é um AVISO (Entre 1 e 10)
     else if (novaBateria < 10 && novaBateria > 0) {
         showBatteryAdvice();
-        // Aqui NÃO zeramos a bateria. O cálculo segue normal, apenas mostramos o aviso.
+        // O cálculo segue normal apenas mostra o aviso.
     }
 
     // Atualiza a interface
@@ -265,7 +265,7 @@ function openOptionsMenu(route, touchY) {
     
     // Posiciona o menu no centro (X) e um pouco acima do dedo do usuário (Y)
     contextMenu.style.left = '50%';
-    contextMenu.style.top = `${touchY - 60}px`; // Sobe 60px para não ficar embaixo do dedo
+    contextMenu.style.top = `${touchY - 60}px`;
     
     optionsOverlay.classList.remove('hidden');
 }
@@ -275,22 +275,22 @@ function closeOptionsMenu() {
     routeSelectedId = null;
 }
 
-// O GRANDE TRUQUE: Fecha o menu se clicar no fundo transparente
+// Fecha o menu se clicar no fundo transparente
 optionsOverlay.addEventListener('click', (e) => {
     if (e.target === optionsOverlay) {
         closeOptionsMenu();
     }
 });
 
-// AÇÃO: EXCLUIR TRAJETO
+// EXCLUIR TRAJETO
 // Elementos da Caixinha de Confirmação
 const confirmDeleteModal = document.getElementById('delete-confirm-modal');
 const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
 const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
-// 1. AÇÃO NO MENU FLUTUANTE: Abre a caixinha de confirmação em vez de excluir direto
+// 1. Abre a caixinha de confirmação em vez de excluir direto
 deleteRouteBtn.addEventListener('click', () => {
-    // CORREÇÃO: Apenas escondemos o menu visualmente, mantendo o routeSelectedId intacto na memória!
+    // Apenas esconde o menu visualmente, mantendo o routeSelectedId na memória
     optionsOverlay.classList.add('hidden'); 
     
     // Mostra a confirmação
@@ -308,11 +308,11 @@ cancelDeleteBtn.addEventListener('click', () => {
 confirmDeleteModal.addEventListener('click', (e) => {
     if (e.target === confirmDeleteModal) {
         confirmDeleteModal.classList.add('hidden');
-        routeSelectedId = null; // Limpamos a memória para não apagar a rota errada depois
+        routeSelectedId = null; // Limpa a memória para não apagar a rota errada depois
     }
 });
 
-// 3. SE CONFIRMAR DE FATO: Apaga do banco de dados
+// 3. SE CONFIRMAR: Apaga do banco de dados
 confirmDeleteBtn.addEventListener('click', () => {
     let routes = getRoutes();
     routes = routes.filter(r => r.id !== routeSelectedId);
@@ -325,7 +325,7 @@ confirmDeleteBtn.addEventListener('click', () => {
 });
 
 
-// AÇÃO: EDITAR TRAJETO
+// EDITAR TRAJETO
 editRouteBtn.addEventListener('click', () => {
     // 1. Pega os dados do banco
     const routes = getRoutes();
@@ -358,7 +358,7 @@ const exportBackupBtn = document.getElementById('export-backup-btn');
 settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
 
 settingsModal.addEventListener('click', (e) => {
-    // Se onde eu cliquei foi EXATAMENTE o fundo escuro (e não o card dentro dele)
+    // Se onde cliquei foi EXATAMENTE o fundo escuro (e não o card dentro dele)
     if (e.target === settingsModal) {
         settingsModal.classList.add('hidden');
     }
@@ -373,14 +373,14 @@ exportBackupBtn.addEventListener('click', () => {
         return;
     }
 
-    // 1. Transforma os dados JS em um texto JSON bonito e identado
+    // 1. Transforma os dados JS em um texto JSON
     const dataStr = JSON.stringify(routes, null, 2);
     
-    // 2. Cria um "arquivo de texto" na memória do navegador
+    // 2. Cria um arquivo de texto na memória do navegador
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     
-    // 3. Cria um link invisível, aperta nele e depois apaga (Truque para forçar download)
+    // 3. Cria um link invisível, aperta nele e depois apaga
     const link = document.createElement('a');
     link.href = url;
     
@@ -405,15 +405,15 @@ const importConfirmModal = document.getElementById('import-confirm-modal');
 const cancelImportBtn = document.getElementById('cancel-import-btn');
 const confirmImportBtn = document.getElementById('confirm-import-btn');
 
-// O SEGREDO: Variável global para segurar os dados enquanto o usuário pensa
+// Variável global para segurar os dados enquanto o usuário pensa
 let pendingImportData = null;
 
-// 1. Truque: O botão bonito clica no input invisível
+// O botão clica no input invisível
 importBackupBtn.addEventListener('click', () => {
     importFileInput.click();
 });
 
-// 2. Quando o usuário escolhe um arquivo
+// Quando o usuário escolhe um arquivo
 importFileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -425,7 +425,7 @@ importFileInput.addEventListener('change', (e) => {
             const dadosRecuperados = JSON.parse(evento.target.result);
 
             if (Array.isArray(dadosRecuperados)) {
-                // Em vez de usar confirm() nativo, guardamos os dados na variável e abrimos a nossa caixinha!
+                // guarda os dados na variável e abrimos a nossa caixinha!
                 pendingImportData = dadosRecuperados; 
                 importConfirmModal.classList.remove('hidden'); 
             } else {
@@ -441,14 +441,14 @@ importFileInput.addEventListener('change', (e) => {
     reader.readAsText(file);
 });
 
-// 3. AÇÃO: SE O USUÁRIO CANCELAR
+// 3. SE O USUÁRIO CANCELAR
 cancelImportBtn.addEventListener('click', () => {
     importConfirmModal.classList.add('hidden'); // Esconde a caixinha
     pendingImportData = null; // Esvazia a variável de segurança
     importFileInput.value = ''; // Limpa o input para permitir selecionar o mesmo arquivo de novo
 });
 
-// 4. AÇÃO: SE O USUÁRIO CONFIRMAR
+// 4. SE O USUÁRIO CONFIRMAR
 confirmImportBtn.addEventListener('click', () => {
     // Só prossegue se tiver dados salvos na variável
     if (pendingImportData) {
@@ -463,7 +463,7 @@ confirmImportBtn.addEventListener('click', () => {
     }
 });
 
-// 5. BÔNUS DE UX: Fechar tocando na área escura de fora
+// 5. Fechar tocando na área escura de fora
 importConfirmModal.addEventListener('click', (e) => {
     if (e.target === importConfirmModal) {
         importConfirmModal.classList.add('hidden');

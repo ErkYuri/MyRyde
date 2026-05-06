@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <!-- Meta tag crucial para Mobile-First: garante proporção correta e evita zoom indesejado -->
+    <!-- garante proporção correta e evita zoom indesejado -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MyRyde | Controle sua Autonomia</title>
     <link rel="manifest" href="manifest.json">
@@ -136,7 +136,7 @@
 
     <!-- TELA DE CONFIGURAÇÕES / BACKUP -->
     <div id="settings-modal" class="modal-overlay hidden">
-        <div class="modal-card">
+        <div class="modal-card settings-card">
 
             <h3 class="options-title">Configurações</h3>
 
@@ -150,7 +150,7 @@
 
                 <input type="file" id="import-file-input" accept=".json" style="display: none;">
 
-                <p style="text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 16px;">
+                <p class="version-text">
                     MyRyde v1.0.0
                 </p>
                 

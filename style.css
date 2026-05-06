@@ -1,11 +1,11 @@
-/* --- DESIGN TOKENS (Sua Nova Identidade Visual) --- */
+/* --- DESIGN TOKENS --- */
 :root {
     /* Paleta Ryde baseada na Logo */
-    --bg-dark: #121212; /* Fundo principal quase preto para dar profundidade */
-    --surface-dark: #272727; /* Cinza da sua logo para os cartões */
+    --bg-dark: #121212; /* Fundo principal quase preto */
+    --surface-dark: #272727; /* Cinza da logo para os cartões */
     --surface-light: #353535; /* Cor para hover e divisões */
     
-    --brand-green: #91ed0d; /* Seu verde neon */
+    --brand-green: #91ed0d; /* verde neon */
     --brand-green-glow: rgba(145, 237, 13, 0.25); /* Sombra neon */
     
     --text-primary: #FFFFFF;
@@ -29,7 +29,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent; /* Fundamental: remove o flash azul do Android ao clicar */
+    -webkit-tap-highlight-color: transparent; /*remove o flash azul do Android ao clicar */
 }
 
 body {
@@ -49,7 +49,7 @@ body {
     align-items: center;
     gap: 4px;
     position: relative;
-    /* Um leve gradiente no topo para dar estilo */
+    /* gradiente no topo para dar estilo */
     background: linear-gradient(180deg, var(--surface-dark) 0%, var(--bg-dark) 100%);
 }
 
@@ -70,7 +70,7 @@ body {
     font-weight: 800;
     letter-spacing: -1px;
     text-transform: uppercase;
-    /* Brilho neon sutil no título */
+    /* Brilho neon no título */
     text-shadow: 0 0 15px var(--brand-green-glow);
 }
 
@@ -91,13 +91,13 @@ body {
     gap: var(--spacing-lg);
 }
 
-/* --- CARTÃO DA BATERIA (Glassmorphism sutil) --- */
+/* --- CARTÃO DA BATERIA  --- */
 .battery-card {
     background-color: var(--surface-dark);
     padding: var(--spacing-lg);
     border-radius: var(--radius-lg);
     text-align: center;
-    /* Sombra elegante que eleva o cartão */
+    /* Sombra no cartão */
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -151,7 +151,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 4px; /* Pequeno respiro lateral */
+    padding: 0 4px;
     margin-bottom: 10px;
 }
 
@@ -164,7 +164,7 @@ body {
     background-color: var(--brand-green);
     color: var(--bg-dark);
     border: none;
-    width: 48px; /* Touch target ideal para mobile (mínimo 44px) */
+    width: 48px; /* Touch target  para mobile */
     height: 48px;
     border-radius: 50%;
     font-size: 1.8rem;
@@ -172,19 +172,43 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    /* Efeito de botão flutuante com brilho */
+    /* Efeito de botão flutuante  */
     box-shadow: 0 6px 16px var(--brand-green-glow);
     transition: transform var(--transition-bounce), box-shadow var(--transition-fast);
+}
+
+/* --- CONFIGURAÇÕES --- */
+
+/* 1. Força o card a ignorar o padding interno na parte de baixo */
+.modal-card.settings-card {
+    padding-bottom: 45px !important;
+}
+
+/* 2. Ajusta a lista de botões para ter um espaço próprio */
+.settings-card .options-list {
+    margin-bottom: 80px; /* Espaço entre o último botão e a versão */
+}
+
+
+.version-text {
+    position: absolute;
+    bottom: 16px; /* Aqui você controla a distância exata do fundo do card */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    opacity: 0.4;
 }
 
 .settings-btn{
     background-color: transparent;
     box-shadow: none;
-    transition: ;
+    /* transition: ; */
     
 }
 
-/* O segredo da sensação tátil de app nativo */
+/* sensação tátil de app nativo */
 .icon-btn:active {
     transform: scale(0.85); /* Afunda ao tocar */
     box-shadow: 0 2px 8px var(--brand-green-glow);
@@ -199,8 +223,8 @@ body {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 7px; /* Aumente este valor (ex: 20px ou 24px) se quiser ainda mais espaço */
-    padding-bottom: 30px; /* Um espaço extra no final da tela para rolar suave */
+    gap: 7px;
+    padding-bottom: 30px; /* espaço extra no final da tela para rolar */
 }
 
 .route-item {
@@ -276,7 +300,7 @@ body {
 }
 
 .modal-overlay.hidden .modal-card {
-    transform: translateY(30px); /* O modal "sobe" quando aparece */
+    transform: translateY(30px); /* O modal sobe quando aparece */
 }
 
 .modal-card h3 {
@@ -359,7 +383,7 @@ body {
     height: auto;
     margin: 0 auto var(--spacing-md) auto;
     display: block;
-    /* Um leve brilho vermelho em volta da imagem para combinar com o app */
+    /* leve brilho vermelho em volta da imagem para combinar com o app */
     filter: drop-shadow(0 4px 10px rgba(255, 69, 58, 0.4));
 }
 
@@ -421,12 +445,12 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: transparent; /* Fundo invisível! Serve só para capturar o clique fora */
+    background-color: transparent; /* Fundo invisível*/
     z-index: 2000;
 }
 
 .context-overlay.hidden {
-    display: none; /* Usamos display: none para ele não bloquear a tela quando escondido */
+    display: none; /* none para ele não bloquear a tela quando escondido */
 }
 
 .context-menu {
@@ -474,7 +498,7 @@ body {
 
 /* --- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO --- */
 .confirm-card {
-    max-width: 320px; /* Caixinha mais estreita para parecer um "alerta rápido" */
+    max-width: 320px; /* Caixinha mais estreita para parecer um alerta rápido */
     text-align: center;
 }
 
@@ -494,7 +518,7 @@ body {
 
 /* --- ESTILOS DA TELA DE CONFIGURAÇÕES --- */
 
-/* Empilha os botões e dá um respiro entre eles */
+
 .options-list {
     display: flex;
     flex-direction: column;
@@ -502,7 +526,7 @@ body {
     margin: var(--spacing-md) 0 var(--spacing-lg) 0;
 }
 
-/* Estilo premium para os botões de exportar/importar */
+/* Estilo para os botões de exportar/importar */
 .btn-option {
     background-color: rgba(255, 255, 255, 0.05); /* Fundo sutil */
     color: var(--text-primary);
@@ -545,6 +569,8 @@ body {
 .close-x-btn:hover, .close-x-btn:active {
     color: var(--brand-green); 
 }
+
+
 
 
 
