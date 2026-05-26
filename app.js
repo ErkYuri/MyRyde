@@ -12,7 +12,7 @@ if ('serviceWorker' in navigator) {
 // --- CONSTANTES ---
 const STORAGE_KEY = '@myryde:routes'; 
 
-// --- SERVIÇOS DE DADOS (LocalStorage) ---
+// --- SERVIÇOS DE DADOS  ---
 
 function getRoutes() {
     const storedRoutes = localStorage.getItem(STORAGE_KEY);
@@ -44,20 +44,19 @@ function saveRoutes(routes) {
  * Pega o array de trajetos e transforma em elementos HTML na tela.
  */
 function renderRoutes(routes) {
-    // 1. Captura a lista (ul) do HTML
+    // Captura a lista (ul) do HTML
     const listElement = document.getElementById('routes-list');
     
-    // 2. Limpa a lista antes de desenhar para não duplicar itens 
-    // se chamar essa função várias vezes
+    // Limpa a lista antes de desenhar para não duplicar itens 
     listElement.innerHTML = ''; 
 
-    // 3. Se a lista estiver vazia, mostra uma mensagem amigável
+    
     if (routes.length === 0) {
         listElement.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 20px;">Nenhum trajeto cadastrado ainda.</p>';
         return; 
     }
 
-    // 4. Se tiver rotas, percorre o array criando os cartões
+    // Se tiver rotas, percorre o array criando os cartões
     routes.forEach(route => {
         const li = document.createElement('li');
         li.className = 'route-item';
@@ -234,12 +233,12 @@ function applyRouteConsumption(consumoDoTrajeto) {
 
     let novaBateria = bateriaAtual - consumoDoTrajeto;
     
-    // 1. Verifica se deu ERRO (Menor que zero)
+    // Verifica se deu ERRO (Menor que zero)
     if(novaBateria <= 0) {
         showBatteryAlert();
-        novaBateria = 0; // Trava no zero pq não é possível fazer o trajeto
+        novaBateria = 0; 
     } 
-    // 2. Verifica se é um AVISO (Entre 1 e 10)
+    // Verifica se é um AVISO (Entre 1 e 10)
     else if (novaBateria < 10 && novaBateria > 0) {
         showBatteryAdvice();
         // O cálculo segue normal apenas mostra o aviso.
@@ -288,9 +287,9 @@ const confirmDeleteModal = document.getElementById('delete-confirm-modal');
 const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
 const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
-// 1. Abre a caixinha de confirmação em vez de excluir direto
+// Abre a caixinha de confirmação em vez de excluir direto
 deleteRouteBtn.addEventListener('click', () => {
-    // Apenas esconde o menu visualmente, mantendo o routeSelectedId na memória
+    // esconde o menu visualmente, mantendo o routeSelectedId na memória
     optionsOverlay.classList.add('hidden'); 
     
     // Mostra a confirmação
@@ -299,7 +298,7 @@ deleteRouteBtn.addEventListener('click', () => {
 
 
 
-// 2. SE DESISTIR: Fecha a confirmação
+// SE DESISTIR: Fecha a confirmação
 cancelDeleteBtn.addEventListener('click', () => {
     confirmDeleteModal.classList.add('hidden');
     routeSelectedId = null; // Limpa a memória de qual trajeto estava selecionado
@@ -312,7 +311,7 @@ confirmDeleteModal.addEventListener('click', (e) => {
     }
 });
 
-// 3. SE CONFIRMAR: Apaga do banco de dados
+// SE CONFIRMAR: Apaga do banco de dados
 confirmDeleteBtn.addEventListener('click', () => {
     let routes = getRoutes();
     routes = routes.filter(r => r.id !== routeSelectedId);
@@ -327,21 +326,21 @@ confirmDeleteBtn.addEventListener('click', () => {
 
 // EDITAR TRAJETO
 editRouteBtn.addEventListener('click', () => {
-    // 1. Pega os dados do banco
+    // Pega os dados do banco
     const routes = getRoutes();
     
-    // 2. Acha o trajeto específico que o usuário clicou usando o ID
+    // Acha o trajeto específico que o usuário clicou usando o ID
     const routeToEdit = routes.find(r => r.id === routeSelectedId);
     
     if (routeToEdit) {
-        // 3. Preenche as caixinhas de texto com os dados do trajeto
+        // Preenche as caixinhas de texto com os dados do trajeto
         inputRouteName.value = routeToEdit.nome;
         inputRouteConsumption.value = routeToEdit.consumoPercentual;
         
-        // 4. Avisa o sistema que estamos no modo de edição deste ID
+        // Avisa o sistema que esta no modo de edição deste ID
         editingRouteId = routeToEdit.id;
         
-        // 5. Fecha o menuzinho flutuante e abre o Modal principal
+        // Fecha o menu flutuante e abre o Modal principal
         closeOptionsMenu();
         modalOverlay.classList.remove('hidden'); 
     }
@@ -373,14 +372,14 @@ exportBackupBtn.addEventListener('click', () => {
         return;
     }
 
-    // 1. Transforma os dados JS em um texto JSON
+    // Transforma os dados JS em um texto JSON
     const dataStr = JSON.stringify(routes, null, 2);
     
-    // 2. Cria um arquivo de texto na memória do navegador
+    // Cria um arquivo de texto na memória do navegador
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     
-    // 3. Cria um link invisível, aperta nele e depois apaga
+    // Cria um link invisível, aperta nele e depois apaga
     const link = document.createElement('a');
     link.href = url;
     
@@ -441,14 +440,14 @@ importFileInput.addEventListener('change', (e) => {
     reader.readAsText(file);
 });
 
-// 3. SE O USUÁRIO CANCELAR
+// SE O USUÁRIO CANCELAR
 cancelImportBtn.addEventListener('click', () => {
     importConfirmModal.classList.add('hidden'); // Esconde a caixinha
     pendingImportData = null; // Esvazia a variável de segurança
     importFileInput.value = ''; // Limpa o input para permitir selecionar o mesmo arquivo de novo
 });
 
-// 4. SE O USUÁRIO CONFIRMAR
+// SE O USUÁRIO CONFIRMAR
 confirmImportBtn.addEventListener('click', () => {
     // Só prossegue se tiver dados salvos na variável
     if (pendingImportData) {
@@ -463,7 +462,7 @@ confirmImportBtn.addEventListener('click', () => {
     }
 });
 
-// 5. Fechar tocando na área escura de fora
+// Fechar tocando na área escura de fora
 importConfirmModal.addEventListener('click', (e) => {
     if (e.target === importConfirmModal) {
         importConfirmModal.classList.add('hidden');
